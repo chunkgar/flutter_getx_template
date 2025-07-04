@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -34,7 +34,7 @@ dependencies:
   get: ^4.1.4
 
   # 日期
-  intl: ^0.17.0
+  intl: ^0.19.0
 
   # 屏幕适配
   flutter_screenutil: ^5.0.0+2
@@ -49,9 +49,9 @@ dependencies:
   flutter_easyloading: ^3.0.3
 
   # http
-  dio: ^4.0.0
-  dio_cookie_manager: ^2.0.0
-  cookie_jar: ^3.0.1
+  dio: ^5.8.0+1
+  dio_cookie_manager: ^3.2.0
+  cookie_jar: ^4.0.8
 
   # 缓存
   shared_preferences: ^2.0.5
@@ -62,7 +62,7 @@ dependencies:
   crypto: ^3.0.1
 
   # webView
-  webview_flutter: ^2.0.4
+  webview_flutter: ^4.10.0
 
   # loading
   loading_animations: ^2.2.0
@@ -80,10 +80,10 @@ dependencies:
   path_provider: ^2.0.1
 
   # permission 权限
-  permission_handler: ^7.1.0
+  permission_handler: ^12.0.1
 
   # 错误收集
-  sentry: ^5.0.0
+  sentry: ^9.3.0
 
   # 通过 scheme 打开APP 获取 参数
   uni_links: ^0.5.1
