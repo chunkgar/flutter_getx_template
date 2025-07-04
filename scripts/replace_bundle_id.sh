@@ -134,33 +134,61 @@ if [ -f "android/app/build.gradle" ]; then
     print_success "  build.gradle applicationId 已更新"
 fi
 
+# 更新 namespace
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' "s/namespace .*/namespace \"$NEW_BUNDLE_ID\"/" android/app/build.gradle
+else
+    sed -i "s/namespace .*/namespace \"$NEW_BUNDLE_ID\"/" android/app/build.gradle
+fi
+
 # 更新 Android 包路径
 if [ ! -z "$CURRENT_ANDROID_ID" ] && [ "$CURRENT_ANDROID_ID" != "$NEW_BUNDLE_ID" ]; then
     # 转换包路径
     OLD_PACKAGE_PATH=$(echo "$CURRENT_ANDROID_ID" | tr '.' '/')
     NEW_PACKAGE_PATH=$(echo "$NEW_BUNDLE_ID" | tr '.' '/')
     
-    ANDROID_MAIN_PATH="android/app/src/main/java"
-    OLD_FULL_PATH="$ANDROID_MAIN_PATH/$OLD_PACKAGE_PATH"
-    NEW_FULL_PATH="$ANDROID_MAIN_PATH/$NEW_PACKAGE_PATH"
+    # 处理Java目录
+    ANDROID_MAIN_JAVA_PATH="android/app/src/main/java"
+    OLD_JAVA_FULL_PATH="$ANDROID_MAIN_JAVA_PATH/$OLD_PACKAGE_PATH"
+    NEW_JAVA_FULL_PATH="$ANDROID_MAIN_JAVA_PATH/$NEW_PACKAGE_PATH"
     
-    if [ -d "$OLD_FULL_PATH" ]; then
-        print_info "  移动 Android 包目录: $OLD_FULL_PATH → $NEW_FULL_PATH"
+    if [ -d "$OLD_JAVA_FULL_PATH" ]; then
+        print_info "  移动 Android Java包目录: $OLD_JAVA_FULL_PATH → $NEW_JAVA_FULL_PATH"
         
         # 创建新的目录结构
-        mkdir -p "$(dirname "$NEW_FULL_PATH")"
+        mkdir -p "$(dirname "$NEW_JAVA_FULL_PATH")"
         
         # 移动文件
-        mv "$OLD_FULL_PATH" "$NEW_FULL_PATH"
+        mv "$OLD_JAVA_FULL_PATH" "$NEW_JAVA_FULL_PATH"
         
         # 清理空的旧目录
-        find "$ANDROID_MAIN_PATH" -type d -empty -delete 2>/dev/null || true
+        find "$ANDROID_MAIN_JAVA_PATH" -type d -empty -delete 2>/dev/null || true
         
-        print_success "  Android 包目录已移动"
+        print_success "  Android Java包目录已移动"
+    fi
+    
+    # 处理Kotlin目录
+    ANDROID_MAIN_KOTLIN_PATH="android/app/src/main/kotlin"
+    OLD_KOTLIN_FULL_PATH="$ANDROID_MAIN_KOTLIN_PATH/$OLD_PACKAGE_PATH"
+    NEW_KOTLIN_FULL_PATH="$ANDROID_MAIN_KOTLIN_PATH/$NEW_PACKAGE_PATH"
+    
+    if [ -d "$OLD_KOTLIN_FULL_PATH" ]; then
+        print_info "  移动 Android Kotlin包目录: $OLD_KOTLIN_FULL_PATH → $NEW_KOTLIN_FULL_PATH"
+        
+        # 创建新的目录结构
+        mkdir -p "$(dirname "$NEW_KOTLIN_FULL_PATH")"
+        
+        # 移动文件
+        mv "$OLD_KOTLIN_FULL_PATH" "$NEW_KOTLIN_FULL_PATH"
+        
+        # 清理空的旧目录
+        find "$ANDROID_MAIN_KOTLIN_PATH" -type d -empty -delete 2>/dev/null || true
+        
+        print_success "  Android Kotlin包目录已移动"
     fi
     
     # 更新 MainActivity.java/kt 中的 package 声明
-    find "$NEW_FULL_PATH" -name "MainActivity.*" -type f 2>/dev/null | while read -r file; do
+    find "$NEW_JAVA_FULL_PATH" "$NEW_KOTLIN_FULL_PATH" -name "*.kt" -type f 2>/dev/null | while read -r file; do
         if [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' "s/^package .*/package $NEW_BUNDLE_ID/" "$file"
         else
@@ -277,5 +305,6 @@ echo "  1. 运行 'flutter clean && flutter pub get'"
 echo "  2. 测试应用是否正常编译和运行"
 echo "  3. 检查所有 import 语句是否正确"
 echo "  4. 如果有问题，可以从备份恢复: cp -r $BACKUP_DIR/* ."
+echo "  5. 撤销操作: git restore lib android/ ios/ pubspec.yaml test/ README.md"
 echo
 print_info "完成！"
