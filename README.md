@@ -4,6 +4,10 @@
 
 # flutter_ducafecat_news_getx
 
+## 更新Bundle ID
+
+`./scripts/replace_bundle_id.sh com.example.app`
+
 ## 接口 api 说明
 
 - api 基础地址
