@@ -1,12 +1,27 @@
+# flutter_getx_template
+
+## 创建新项目
+
+```shell
+git clone --depth=1 git@github.com:chunkgar/flutter_getx_template.git <project>
+cd <project>
+rm -rf .git
+./scripts/replace_bundle_id.sh <new bundle id>
+rm -rf bundle_id_backup_*
+git add -A && git commit -m "Initial commit"
+```
+
+## 更新Bundle ID
+
+`./scripts/replace_bundle_id.sh com.example.app`
+
+##
+
 <a href="https://ducafecat.com" target="_blank">
   <img src="https://ducafecat.oss-cn-beijing.aliyuncs.com/ducafecat/video-ducafecat-banner.png" alt="猫哥视频站" >
 </a>
 
 # flutter_ducafecat_news_getx
-
-## 更新Bundle ID
-
-`./scripts/replace_bundle_id.sh com.example.app`
 
 ## 接口 api 说明
 
